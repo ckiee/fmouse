@@ -13,7 +13,7 @@
 #define ATLEAST_ZERO(x) x > 0 ? x : 0
 
 short screenX, screenY, screenId = -1, gridOffsetX = 0, gridOffsetY = 0,
-                        gridResPxRatio = 16, gridParts, lineThickness = 2,
+                        gridResPxRatio = 32, gridParts, lineThickness = 2,
                         drawGrid = 1, maxGridX, maxGridY, fontScale = -1;
 char choice[3] = "  ";
 
@@ -83,7 +83,7 @@ int main() {
     int xPart = screenX / gridResPxRatio;
     int yPart = screenX / gridResPxRatio;
     if (fontScale == -1) {
-      fontScale = xPart / (8 * 2);
+      fontScale = xPart / (8 * 1.8);
     }
     if (fontScale <= 0) {
       CNFGTearDown();
