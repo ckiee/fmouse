@@ -46,8 +46,16 @@ void DrawCharacterOverlaying(short xOffset, short yOffset, char ch, short scale,
   CNFGDrawToTransparencyMode(1);
   DrawCharacter(xOffset, yOffset, ch, scale);
   CNFGDrawToTransparencyMode(0);
+  short moreOffset = 0;
+  short scaleOffset = 0;
+  if (scale == 8) {
+    CNFGColor(0x000000ff);
+    DrawCharacter(xOffset, yOffset, ch, scale);
+    moreOffset = 2;
+    scaleOffset = -1;
+  }
   CNFGColor(color);
-  DrawCharacter(xOffset, yOffset, ch, scale);
+  DrawCharacter(xOffset + moreOffset, yOffset + moreOffset, ch, scale + scaleOffset);
 }
 
 void DrawStringOverlaying(short xOffset, short yOffset, char *str, short scale,
