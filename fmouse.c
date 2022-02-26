@@ -101,12 +101,12 @@ int main() {
                           y + (lineThickness / 2));
       }
       char stopGridContents = 0;
+      int permutationIdx = 0;
       for (int x = gridOffsetX; x < maxGridX; x += xPart) {
         for (int y = gridOffsetY; y < maxGridY; y += yPart) {
           if (!stopGridContents) {
             uint32_t colors[] = {0xe65100ff, 0xe65100ff};
-            char *name = permutations[((x - gridOffsetX) / xPart) * 8 +
-                                      (y - gridOffsetY) / yPart];
+            char *name = permutations[permutationIdx++];
             if (*choice == *name) {
               colors[0] = 0xffeb3bff;
             }
