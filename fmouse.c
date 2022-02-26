@@ -14,19 +14,20 @@
 
 short screenX, screenY, screenId = -1, gridOffsetX = 0, gridOffsetY = 0,
                         gridResPxRatio = 32, gridParts, lineThickness = 2,
-                        drawGrid = 1, maxGridX, maxGridY, fontScale = -1;
+                        drawGrid = 1, maxGridX, maxGridY, fontScale = -1,
+                        mouseButton = 1;
 char choice[3] = "  ";
 
-void MouseClick(int button) {
+void MouseClick() {
   if (!CNFGDisplay)
     CNFGDisplay = XOpenDisplay(NULL);
-  XTestFakeButtonEvent(CNFGDisplay, Button1, false, CurrentTime);
+  XTestFakeButtonEvent(CNFGDisplay, mouseButton, false, CurrentTime);
   XFlush(CNFGDisplay);
   usleep(1000 * 10);
-  XTestFakeButtonEvent(CNFGDisplay, Button1, true, CurrentTime);
+  XTestFakeButtonEvent(CNFGDisplay, mouseButton, true, CurrentTime);
   XFlush(CNFGDisplay);
   usleep(1000 * 10);
-  XTestFakeButtonEvent(CNFGDisplay, Button1, false, CurrentTime);
+  XTestFakeButtonEvent(CNFGDisplay, mouseButton, false, CurrentTime);
   XFlush(CNFGDisplay);
 }
 
@@ -55,7 +56,8 @@ void DrawCharacterOverlaying(short xOffset, short yOffset, char ch, short scale,
     scaleOffset = -1;
   }
   CNFGColor(color);
-  DrawCharacter(xOffset + moreOffset, yOffset + moreOffset, ch, scale + scaleOffset);
+  DrawCharacter(xOffset + moreOffset, yOffset + moreOffset, ch,
+                scale + scaleOffset);
 }
 
 void DrawStringOverlaying(short xOffset, short yOffset, char *str, short scale,
@@ -72,7 +74,20 @@ void DrawStringOverlaying(short xOffset, short yOffset, char *str, short scale,
   }
 }
 
-int main() {
+int main(int argc, char** argv) {
+  while (argc > 1) {
+    char *arg = argv[--argc];
+    if (strcmp("--right-click", arg) == 0 || strcmp("-r", arg) == 0) {
+      mouseButton = 3;
+    }
+    if (strcmp("--help", arg) == 0 || strcmp("-h", arg) == 0) {
+      printf("Usage: fmouse [options]\n");
+      printf("Options:\n");
+      printf("\t--right-click, -r\tSimulate a right click instead of the default left\n");
+      printf("\t--help, -h\t\t\tShow this help message\n");
+      return 0;
+    }
+  }
   CNFGBGColor = 0xffffffff;
   CNFGPrepareForTransparency();
   CNFGSetupFullscreen("fmouse", screenId);
@@ -95,7 +110,7 @@ int main() {
     }
     if (fontScale <= 0) {
       CNFGTearDown();
-      MouseClick(Button1);
+      MouseClick();
       exit(0);
     }
     if (drawGrid) {
@@ -163,7 +178,7 @@ void HandleKey(int keycode, int down) {
   } else if (!down && keycode == ' ') {
     CNFGTearDown();
     usleep(10000);
-    MouseClick(Button1);
+    MouseClick();
     exit(0);
   }
 }
